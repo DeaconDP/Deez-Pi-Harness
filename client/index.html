@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="description" content="Desktop PWA frontend for the Pi coding agent" />
+    <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+    <link rel="apple-touch-icon" href="/icon-180.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+    <title>DEEZ PI UI</title>
+  </head>
+  <body>
+    <div id="app">
+      <header id="header">
+        <div class="header-left">
+          <div class="brand">
+            <div class="brand-title" aria-label="DEEZ PI UI">
+              <span class="brand-deez">DEEZ</span><span class="brand-pi"> PI UI</span>
+            </div>
+            <span class="brand-tagline">acces your bots anywhere</span>
+          </div>
+          <span id="session-name" class="session-name"></span>
+        </div>
+        <div class="header-right">
+          <span id="status-dot" class="status-dot disconnected"></span>
+          <span id="status-text" class="status-text">Connecting…</span>
+        </div>
+      </header>
+
+      <div id="bridge-offline" class="bridge-offline hidden">
+        <div class="bridge-offline-card">
+          <h2>Bridge not running</h2>
+          <p>The coding agent runs via a localhost Node bridge. Start it from the project root:</p>
+          <p class="bridge-hint"><strong>macOS:</strong> double-click <code>Pi PWA.command</code></p>
+          <p class="bridge-hint"><strong>Windows:</strong> double-click <code>Pi PWA.bat</code></p>
+          <button id="bridge-retry" type="button" class="btn btn-primary bridge-retry-btn">Retry connection</button>
+          <p class="bridge-hint bridge-hint-muted">Or from a terminal: <code>npm run launch</code></p>
+        </div>
+      </div>
+
+      <div id="workspace" class="workspace">
+        <aside id="panel-sessions" class="panel panel-left panel-animate">
+          <div class="panel-chrome">
+            <h2 class="panel-heading">Sessions</h2>
+            <div class="panel-chrome-actions">
+              <button id="btn-new" type="button" class="btn btn-ghost btn-sm" title="New session">＋ New</button>
+              <button
+                id="panel-sessions-toggle"
+                type="button"
+                class="panel-toggle btn-pressable"
+                aria-expanded="true"
+                aria-controls="panel-sessions-body"
+                title="Collapse sessions panel"
+              >
+                <span class="panel-toggle-icon" aria-hidden="true"></span>
+              </button>
+            </div>
+          </div>
+          <div id="panel-sessions-body" class="panel-body">
+            <div id="nodes-section" class="hidden">
+              <h3 class="panel-subheading">Nodes</h3>
+              <div id="nodes-list" class="nodes-list"></div>
+            </div>
+            <div class="panel-subheading-bar">
+              <h3 class="panel-subheading">Sessions</h3>
+              <div class="panel-subheading-actions">
+                <button id="btn-show-archived" type="button" class="btn btn-ghost btn-sm" title="Show archived sessions">Archived</button>
+                <button id="btn-tree" type="button" class="btn btn-ghost btn-sm" title="Session tree">Tree</button>
+              </div>
+            </div>
+            <div id="sessions-list" class="sessions-list"></div>
+          </div>
+        </aside>
+
+        <section id="panel-center" class="panel panel-center panel-animate">
+          <div id="chat-panel" class="chat-panel">
+            <canvas id="matrix-bg" aria-hidden="true"></canvas>
+            <div id="messages" class="messages"></div>
+            <div id="streaming-indicator" class="streaming-indicator hidden" aria-live="polite">
+              <span class="typing-dots" aria-hidden="true"><span></span><span></span><span></span></span>
+              Agent is typing…
+            </div>
+            <footer id="input-bar" class="input-bar">
+              <div id="thinking-control-slot" class="thinking-control-slot"></div>
+              <textarea
+                id="prompt-input"
+                class="prompt-input"
+                placeholder="Message Agent.."
+                rows="1"
+                disabled
+              ></textarea>
+              <button id="btn-send" class="btn btn-primary">Send</button>
+              <button id="btn-abort" class="btn btn-danger hidden">Stop</button>
+            </footer>
+          </div>
+        </section>
+
+        <aside id="panel-agent" class="panel panel-right panel-animate">
+          <div class="panel-chrome">
+            <div class="panel-heading-group">
+              <h2 class="panel-heading">Agent</h2>
+            </div>
+            <div class="panel-chrome-actions">
+              <button
+                id="panel-agent-toggle"
+                type="button"
+                class="panel-toggle btn-pressable"
+                aria-expanded="true"
+                aria-controls="panel-agent-body"
+                title="Collapse agent panel"
+              >
+                <span class="panel-toggle-icon" aria-hidden="true"></span>
+              </button>
+            </div>
+          </div>
+          <div id="panel-agent-body" class="panel-body">
+            <div id="mobile-notice" class="mobile-notice hidden">
+              <strong>Mobile chat mode.</strong> LLM chat runs on-device via your API key. Coding tools (bash, files, extensions) require the desktop bridge.
+            </div>
+            <div id="agent-panel" class="agent-panel"></div>
+          </div>
+          <div id="debug-log-bar" class="debug-log-bar">
+            <button id="debug-log-toggle" type="button" class="debug-log-toggle">▸ Debug log</button>
+            <span id="debug-log-count" class="debug-log-count">0</span>
+            <button id="debug-log-clear" type="button" class="debug-log-clear">Clear</button>
+            <div id="debug-log-body" class="debug-log-body hidden">
+              <div id="debug-log-content" class="debug-log-content"></div>
+            </div>
+          </div>
+        </aside>
+      </div>
+
+      <nav id="mobile-nav" class="mobile-nav" aria-label="Main navigation" hidden>
+        <button type="button" class="mobile-nav-tab" data-mobile-tab="sessions">Sessions</button>
+        <button type="button" class="mobile-nav-tab is-active" data-mobile-tab="chat" aria-current="page">Chat</button>
+        <button type="button" class="mobile-nav-tab" data-mobile-tab="agent">Agent</button>
+      </nav>
+
+      <footer id="site-footer" class="site-footer">
+        built with Cursor by
+        <a href="https://deac.online" target="_blank" rel="noopener noreferrer">deac.online</a>
+        &amp;
+        <a href="https://worldbuild.io" target="_blank" rel="noopener noreferrer">worldbuild.io</a>
+      </footer>
+    </div>
+
+    <div id="dialog-overlay" class="dialog-overlay hidden">
+      <div id="dialog-box" class="dialog-box">
+        <div id="dialog-title" class="dialog-title"></div>
+        <div id="dialog-message" class="dialog-message"></div>
+        <div id="dialog-body" class="dialog-body"></div>
+        <div id="dialog-actions" class="dialog-actions"></div>
+      </div>
+    </div>
+
+    <div id="panel-overlay" class="dialog-overlay hidden">
+      <div id="panel-box" class="dialog-box panel-box">
+        <div class="panel-header">
+          <div id="panel-title" class="dialog-title"></div>
+          <button id="panel-close" class="btn btn-ghost">Close</button>
+        </div>
+        <div id="panel-body" class="panel-body"></div>
+      </div>
+    </div>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

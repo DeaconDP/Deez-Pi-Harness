@@ -1,0 +1,12 @@
+node_modules/
+dist/
+dist-server/
+client/dist/
+ios/App/Pods/
+ios/DerivedData/
+ios/build/
+*.log
+.DS_Store
+.env
+.pi-pwa/
+.cursor/debug*.log

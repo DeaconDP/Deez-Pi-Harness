@@ -1,0 +1,100 @@
+/* Micro-animations */
+
+@keyframes panel-in {
+	from {
+		opacity: 0;
+		transform: translateY(6px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.panel-animate {
+	animation: panel-in 0.35s ease-out;
+}
+
+@keyframes status-pulse {
+	0%, 100% { opacity: 1; transform: scale(1); }
+	50% { opacity: 0.7; transform: scale(1.15); }
+}
+
+.status-dot.connected,
+.node-status-dot.active,
+.node-status-dot.connected {
+	animation: status-pulse 2.5s ease-in-out infinite;
+}
+
+@keyframes feed-slide-in {
+	from {
+		opacity: 0;
+		transform: translateX(8px);
+	}
+	to {
+		opacity: 1;
+		transform: translateX(0);
+	}
+}
+
+.peer-feed-item {
+	animation: feed-slide-in 0.25s ease-out;
+}
+
+.btn-pressable:active {
+	transform: scale(0.96);
+	transition: transform 0.08s;
+}
+
+.site-footer a {
+	position: relative;
+}
+
+.site-footer a::after {
+	content: "";
+	position: absolute;
+	left: 0;
+	bottom: -1px;
+	width: 0;
+	height: 1px;
+	background: var(--accent);
+	transition: width 0.2s ease;
+}
+
+.site-footer a:hover::after {
+	width: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.panel-animate,
+	.status-dot.connected,
+	.node-status-dot.active,
+	.node-status-dot.connected,
+	.peer-feed-item {
+		animation: none;
+	}
+
+	.panel-left,
+	.panel-right,
+	.panel-center,
+	.panel-body,
+	.panel-chrome,
+	.panel-chrome .panel-heading,
+	.panel-toggle,
+	.panel-toggle-icon {
+		transition: none !important;
+	}
+
+	.panel-left.is-collapsed .panel-body,
+	.panel-right.is-collapsed .panel-body {
+		transform: none;
+	}
+
+	.btn-pressable:active {
+		transform: none;
+	}
+
+	.site-footer a::after {
+		display: none;
+	}
+}

@@ -1,0 +1,52 @@
+{
+	"name": "pi-pwa",
+	"version": "0.1.0",
+	"description": "Installable PC/Mac PWA frontend for the Pi coding agent",
+	"type": "module",
+	"bin": {
+		"pi-pwa": "./dist-server/bin/pi-pwa.js"
+	},
+	"engines": {
+		"node": ">=22.19.0"
+	},
+	"scripts": {
+		"setup": "npm install && npm run build",
+		"setup:run": "bash scripts/run.sh",
+		"launch": "bash scripts/run.sh",
+		"dev": "concurrently -n client,server -c cyan,magenta \"npm run dev:client\" \"npm run dev:server\"",
+		"dev:client": "vite --config client/vite.config.ts",
+		"dev:server": "tsx watch server/index.ts",
+		"build": "npm run build:client && npm run build:server",
+		"build:client": "vite build --config client/vite.config.ts",
+		"build:server": "tsc -p tsconfig.server.json",
+		"start": "node dist-server/server/index.js",
+		"pi-pwa": "tsx bin/pi-pwa.ts",
+		"test": "tsx --test test/**/*.test.ts",
+		"build:ios": "npm run build:client && npx cap sync ios",
+		"open:ios": "npx cap open ios"
+	},
+	"dependencies": {
+		"@capacitor/cli": "^8.4.1",
+		"@capacitor/core": "^8.4.1",
+		"@capacitor/ios": "^8.4.1",
+		"@capacitor/keyboard": "^8.0.5",
+		"@capacitor/preferences": "^8.0.1",
+		"@capacitor/status-bar": "^8.0.2",
+		"@earendil-works/pi-coding-agent": "0.80.2",
+		"capacitor-secure-storage-plugin": "^0.13.0",
+		"ws": "8.18.3"
+	},
+	"devDependencies": {
+		"@types/node": "22.19.19",
+		"@types/ws": "8.18.1",
+		"concurrently": "9.2.1",
+		"highlight.js": "11.11.1",
+		"marked": "15.0.12",
+		"marked-highlight": "2.2.3",
+		"tsx": "4.22.1",
+		"typescript": "5.9.3",
+		"vite": "6.4.1",
+		"vite-plugin-pwa": "0.21.2",
+		"workbox-window": "7.3.0"
+	}
+}

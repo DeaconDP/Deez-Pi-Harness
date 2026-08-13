@@ -1,7 +1,7 @@
 # Deez Pi Harness
 
 <p align="center">
-  <img src="https://cdn.jsdelivr.net/gh/DeaconDP/Deez-Pi-Harness@PLACEHOLDER/docs/screenshots/hero.png" alt="Deez Pi Harness" width="720" />
+  <img src="https://cdn.jsdelivr.net/gh/DeaconDP/Deez-Pi-Harness@e16503cc384c2d07cad5402791c005be11243c7a/docs/screenshots/hero.png" alt="Deez Pi Harness" width="720" />
 </p>
 
 Installable PWA frontend for the Pi coding agent — talk to LLM providers from a browser.
